@@ -101,7 +101,8 @@ absl::optional<std::string> GetHttpProxyServer(
   } else {
     /* User cred found */
     *user_cred = uri->authority().substr(0, at);
-    proxy_name = uri->authority().substr(at + 1, uri->authority().size() - at - 1);
+    proxy_name =
+        uri->authority().substr(at + 1, uri->authority().size() - at - 1);
     gpr_log(GPR_DEBUG, "userinfo found in proxy URI");
   }
   return proxy_name;
