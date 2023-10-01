@@ -2786,6 +2786,7 @@ grpc_cc_library(
         "absl/status:statusor",
         "absl/strings",
         "absl/strings:str_format",
+        "absl/types:optional",
     ],
     visibility = ["@grpc:alt_grpc_base_legacy"],
     deps = ["gpr"],

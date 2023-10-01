@@ -45,19 +45,22 @@ class ScopedSetEnv {
 TEST(ProxyTest, UserInfo) {
   // lets change this to use tuples instead of a map
   std::tuple<std::string_view, std::string> test_cases[2] = {
-    // echo -n user:pass | base64
-    {"user:pass", "dXNlcjpwYXNz"},
-    // echo -n user@google.com:pass | base64
-    {"user%40google.com:pass", "dXNlckBnb29nbGUuY29tOnBhc3M="},
+      // echo -n user:pass | base64
+      {"user:pass", "dXNlcjpwYXNz"},
+      // echo -n user@google.com:pass | base64
+      {"user%40google.com:pass", "dXNlckBnb29nbGUuY29tOnBhc3M="},
   };
   for (const auto& test_case : test_cases) {
-    auto args = ChannelArgs().Set(GRPC_ARG_HTTP_PROXY, absl::StrCat("http://", std::get<0>(test_case), "@proxy.google.com"));
+    auto args = ChannelArgs().Set(
+        GRPC_ARG_HTTP_PROXY,
+        absl::StrCat("http://", std::get<0>(test_case), "@proxy.google.com"));
     EXPECT_EQ(HttpProxyMapper().MapName("dns:///test.google.com:443", &args),
               "proxy.google.com");
     EXPECT_EQ(args.GetString(GRPC_ARG_HTTP_CONNECT_SERVER),
               "test.google.com:443");
-    EXPECT_EQ(args.GetString(GRPC_ARG_HTTP_CONNECT_HEADERS),
-              absl::StrCat("Proxy-Authorization:Basic ", std::get<1>(test_case)));
+    EXPECT_EQ(
+        args.GetString(GRPC_ARG_HTTP_CONNECT_HEADERS),
+        absl::StrCat("Proxy-Authorization:Basic ", std::get<1>(test_case)));
   }
 }
 
